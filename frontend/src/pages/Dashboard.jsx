@@ -5,6 +5,24 @@ import api from "../services/api";
 function Dashboard() {
   const [filter, setFilter] = useState("all");
   const [showTaskForm, setShowTaskForm] = useState(false);
+  const [darkMode, setDarkMode] = useState(
+  localStorage.getItem("darkMode") === "true"
+);
+
+const toggleDarkMode = () => {
+  setDarkMode((previousMode) => {
+    const newMode = !previousMode;
+
+    localStorage.setItem(
+      "darkMode",
+      newMode.toString()
+    );
+
+    return newMode;
+  });
+};
+
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [tasks, setTasks] = useState([]);
 
@@ -21,11 +39,7 @@ function Dashboard() {
       setLoading(true);
       setError("");
 
-      const response = await api.get("/tasks", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await api.get("/tasks");
 
       setTasks(response.data.tasks);
     } catch (error) {
@@ -55,13 +69,28 @@ function Dashboard() {
     }
   }, [token]);
 
-  const filteredTasks = tasks.filter((task) => {
-    if (filter === "all") {
-      return true;
-    }
 
-    return task.status === filter;
-  });
+
+  const completedTasks = tasks.filter(
+  (task) => task.status === "completed"
+).length;
+
+const totalTasks = tasks.length;
+
+const completionPercentage =
+  totalTasks === 0
+    ? 0
+    : Math.round((completedTasks / totalTasks) * 100);
+  const filteredTasks = tasks.filter((task) => {
+  const matchesFilter =
+    filter === "all" || task.status === filter;
+
+  const matchesSearch = task.title
+    .toLowerCase()
+    .includes(searchQuery.toLowerCase());
+
+  return matchesFilter && matchesSearch;
+});
 
   const handleTaskCreated = (newTask) => {
     setTasks((previousTasks) => [
@@ -74,17 +103,9 @@ function Dashboard() {
 
   const handleCompleteTask = async (taskId) => {
     try {
-      const response = await api.put(
-        `/tasks/${taskId}`,
-        {
-          status: "completed",
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await api.put(`/tasks/${taskId}`, {
+  status: "completed",
+});
 
       setTasks((previousTasks) =>
         previousTasks.map((task) =>
@@ -113,11 +134,7 @@ function Dashboard() {
     }
 
     try {
-      await api.delete(`/tasks/${taskId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await api.delete(`/tasks/${taskId}`);
 
       setTasks((previousTasks) =>
         previousTasks.filter(
@@ -158,24 +175,31 @@ function Dashboard() {
   };
 
   return (
-    <div className="dashboard">
+    <div
+  className={`dashboard ${
+    darkMode ? "dark-mode" : ""
+  }`}
+>
       <header className="navbar">
-        <div className="navbar-brand">
-          Task Manager
-        </div>
-
         <div className="navbar-user">
-          <span>
-            Welcome, {user?.name || "User"}
-          </span>
+  <span>
+    Welcome, {user?.name || "User"}
+  </span>
 
-          <button
-            className="logout-button"
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
-        </div>
+  <button
+    className="theme-button"
+    onClick={toggleDarkMode}
+  >
+    {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+  </button>
+
+  <button
+    className="logout-button"
+    onClick={handleLogout}
+  >
+    Logout
+  </button>
+</div>
       </header>
 
       <main className="dashboard-content">
@@ -211,6 +235,29 @@ function Dashboard() {
             onClose={() => setEditingTask(null)}
           />
         )}
+
+        <div className="progress-card">
+  <div className="progress-header">
+    <div>
+      <h2>Your Progress</h2>
+      <p>
+        {completedTasks} of {totalTasks} tasks completed
+      </p>
+    </div>
+
+    <strong>{completionPercentage}%</strong>
+  </div>
+
+  <div className="progress-track">
+    <div
+      className="progress-fill"
+      style={{
+        width: `${completionPercentage}%`,
+      }}
+    ></div>
+  </div>
+</div>
+
         <div className="task-stats">
         <div className="stat-card">
             <span className="stat-label">All Tasks</span>
@@ -231,6 +278,17 @@ function Dashboard() {
             </strong>
         </div>
         </div>
+
+        <div className="search-container">
+        <input
+          type="text"
+          placeholder="Search tasks by title..."
+          value={searchQuery}
+          onChange={(event) =>
+            setSearchQuery(event.target.value)
+          }
+        />
+      </div>
         <div className="filter-buttons">
           <button
             className={
@@ -287,9 +345,11 @@ function Dashboard() {
           <div className="empty-state">
             <h3>No tasks found</h3>
 
-            <p>
-              You don't have any tasks in this category.
-            </p>
+<p>
+  {searchQuery
+    ? "No tasks match your search."
+    : "You don't have any tasks in this category."}
+</p>
           </div>
         ) : (
           <div className="task-list">
@@ -311,6 +371,19 @@ function Dashboard() {
                   >
                     {task.status}
                   </span>
+
+                  <div className="task-meta">
+  {task.dueDate && (
+    <span className="due-date">
+      Due:{" "}
+      {new Date(task.dueDate).toLocaleDateString()}
+    </span>
+  )}
+
+  <span className={`priority ${task.priority}`}>
+    Priority: {task.priority}
+  </span>
+</div>
                 </div>
 
                 <div className="task-actions">
@@ -358,10 +431,22 @@ function EditTaskForm({
   onTaskUpdated,
   onClose,
 }) {
-  const [title, setTitle] = useState(task.title);
-  const [description, setDescription] = useState(
-    task.description || ""
-  );
+ const [title, setTitle] = useState(task.title);
+
+const [description, setDescription] = useState(
+  task.description || ""
+);
+
+const [dueDate, setDueDate] = useState(
+  task.dueDate
+    ? new Date(task.dueDate).toISOString().split("T")[0]
+    : ""
+);
+
+const [priority, setPriority] = useState(
+  task.priority || "medium"
+);
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -377,19 +462,12 @@ function EditTaskForm({
     setError("");
 
     try {
-      const response = await api.put(
-        `/tasks/${task._id}`,
-        {
-          title,
-          description,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+    const response = await api.put(`/tasks/${task._id}`, {
+  title: title.trim(),
+  description: description.trim(),
+  dueDate: dueDate || null,
+  priority,
+});
       onTaskUpdated(response.data.task);
     } catch (error) {
       setError(
@@ -451,6 +529,41 @@ function EditTaskForm({
             }
           />
         </div>
+
+        <div className="task-form-row">
+  <div className="form-group">
+    <label htmlFor="edit-due-date">
+      Due Date
+    </label>
+
+    <input
+      type="date"
+      id="edit-due-date"
+      value={dueDate}
+      onChange={(event) =>
+        setDueDate(event.target.value)
+      }
+    />
+  </div>
+
+  <div className="form-group">
+    <label htmlFor="edit-priority">
+      Priority
+    </label>
+
+    <select
+      id="edit-priority"
+      value={priority}
+      onChange={(event) =>
+        setPriority(event.target.value)
+      }
+    >
+      <option value="low">Low</option>
+      <option value="medium">Medium</option>
+      <option value="high">High</option>
+    </select>
+  </div>
+</div>
 
         <div className="task-form-actions">
           <button
