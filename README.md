@@ -234,13 +234,7 @@ Advanced analytics
 Task categories
 Demo
 
-Live Demo:
 
-Not deployed yet
-
-Backend API:
-
-Not deployed yet
 Author
 
 Developed as part of a MERN Internship Task.
@@ -272,6 +266,7 @@ Then we should create .env.example later with:
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
-live demo:
+
+Demo video:
 
 https://drive.google.com/file/d/1C8dAQqpahx-QAokwVsbUVKGlVxzGXZnO/view?usp=sharing
