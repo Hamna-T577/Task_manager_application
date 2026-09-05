@@ -1,5 +1,6 @@
 # Task Manager App
 
+
 A full-stack Task Manager application built using the MERN stack.
 
 This project was developed as part of a MERN Internship Task and includes secure user authentication, task management, filtering, search, task priorities, due dates, progress tracking, and dark/light mode support.
@@ -250,6 +251,10 @@ Developed as part of a MERN Internship Task.
 
 Use:
 
+
+
+
+
 ```text
 backend/
 ├── controllers/
@@ -259,3 +264,7 @@ backend/
 ├── .env.example
 ├── server.js
 └── package.json
+
+live demo:
+
+https://drive.google.com/file/d/1C8dAQqpahx-QAokwVsbUVKGlVxzGXZnO/view?usp=sharing
