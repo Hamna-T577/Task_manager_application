@@ -265,6 +265,13 @@ backend/
 ├── server.js
 └── package.json
 
+
+
+Then we should create .env.example later with:
+
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
 live demo:
 
 https://drive.google.com/file/d/1C8dAQqpahx-QAokwVsbUVKGlVxzGXZnO/view?usp=sharing
