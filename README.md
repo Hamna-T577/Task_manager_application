@@ -1,79 +1,53 @@
-# Task Manager App
-
-
+Task Manager App
 A full-stack Task Manager application built using the MERN stack.
 
 This project was developed as part of a MERN Internship Task and includes secure user authentication, task management, filtering, search, task priorities, due dates, progress tracking, and dark/light mode support.
 
----
-
-## Features
-
-### Authentication
-
-- User Signup
-- User Login
-- JWT-based authentication
-- Password hashing using bcrypt
-- Protected dashboard
-- User-specific private tasks
-- Logout functionality
-
-### Task Management
-
-- Create tasks
-- View tasks
-- Edit tasks
-- Delete tasks
-- Mark tasks as completed
-- Task status: Pending / Completed
-
-### Task Filtering and Search
-
-- View all tasks
-- Filter Pending tasks
-- Filter Completed tasks
-- Search tasks by title
-
-### Bonus Features
-
-- Due Date
-- Priority: Low / Medium / High
-- Completed Percentage progress bar
-- Dark Mode / Light Mode
-- Responsive design
-
----
-
-## Tech Stack
-
-### Frontend
-
-- React
-- Vite
-- Axios
-- React Router
-- CSS
-
-### Backend
-
-- Node.js
-- Express.js
-- JWT
-- bcryptjs
-- dotenv
-- CORS
-
-### Database
-
-- MongoDB
-- Mongoose
-
----
-
-## Project Structure
-
-```text
+Features
+Authentication
+User Signup
+User Login
+JWT-based authentication
+Password hashing using bcrypt
+Protected dashboard
+User-specific private tasks
+Logout functionality
+Task Management
+Create tasks
+View tasks
+Edit tasks
+Delete tasks
+Mark tasks as completed
+Task status: Pending / Completed
+Task Filtering and Search
+View all tasks
+Filter Pending tasks
+Filter Completed tasks
+Search tasks by title
+Bonus Features
+Due Date
+Priority: Low / Medium / High
+Completed Percentage progress bar
+Dark Mode / Light Mode
+Responsive design
+Tech Stack
+Frontend
+React
+Vite
+Axios
+React Router
+CSS
+Backend
+Node.js
+Express.js
+JWT
+bcryptjs
+dotenv
+CORS
+Database
+MongoDB
+Mongoose
+Project Structure
 task-manager-app/
 │
 ├── frontend/
