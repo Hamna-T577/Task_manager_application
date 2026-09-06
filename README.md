@@ -233,7 +233,10 @@ Advanced analytics
 Task categories
 Demo
 
+backend deployed in render:
 
+ https://task-manager-application-5.onrender.com
+ 
 Author
 
 Developed as part of a MERN Internship Task.
