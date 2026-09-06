@@ -241,7 +241,7 @@ Task categories
 
 The Task Manager application is deployed on Vercel.
 
-https://task-manager-application-sable.vercel.app/login
+https://task-manager-application-sable.vercel.app
 [Open Live Application]
 
 ### Backend API
