@@ -231,12 +231,26 @@ Email notifications
 Drag-and-drop task organization
 Advanced analytics
 Task categories
-Demo
 
-backend deployed in render:
 
- https://task-manager-application-5.onrender.com
- 
+
+
+## Demo
+
+### Live Application
+
+The Task Manager application is deployed on Vercel.
+
+https://task-manager-application-sable.vercel.app/login
+[Open Live Application]
+
+### Backend API
+
+The Node.js/Express backend is deployed on Render.
+
+(https://task-manager-application-4.onrender.com)
+[Open Backend API]
+
 Author
 
 Developed as part of a MERN Internship Task.
